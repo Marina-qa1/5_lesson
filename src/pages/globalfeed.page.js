@@ -1,9 +1,9 @@
 export class GlobalFeedPage {
 	constructor(page) {
 		// техническое описание страницы
-		this.signupLink = page.getByRole('link', { name: 'Sign up' });
-		this.loginLink = page.getByRole('link', { name: 'Login' });
-      //  this.buttonGlobalFeed = page.getByRole('button', { name: 'Global Feed' });
+		    this.signupLink = page.getByRole('link', { name: 'Sign up' });
+		    this.loginLink = page.getByRole('link', { name: 'Login' });
+
         this.navigationLogin = page.getByRole('navigation').getByText('Marina');
         this.profile = page.getByRole('link', { name: ' Profile' });
         this.selectArticle = page.getByRole('link', { name: 'Title text Marina me and you' });
@@ -17,11 +17,7 @@ export class GlobalFeedPage {
         this.commentButton = page.getByRole('button', { name: 'Post Comment' });
 
         this.deleteButton = page.getByRole('button', { name: ' Delete Article' }).first();
-//     page.once('dialog', dialog => {
-//     console.log(`Dialog message: ${dialog.message()}`);
-//     dialog.dismiss().catch(() => {});
-//   });
-        //this.notAvailable = page.getByText('Articles not available.');
+
         this.notAvailable = page.getByRole('button', { name: 'Your Feed' });
 
 	}
@@ -29,13 +25,6 @@ export class GlobalFeedPage {
 	async gotoRegister() {
 		await this.signupLink.click();
 	}
-
-   /* 
-   async gotoGlobalFeed() {
-
-		await this.buttonGlobalFeed.click();
-	} 
-        */
 
    async transferProfile() {
 

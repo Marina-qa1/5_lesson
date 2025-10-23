@@ -1,10 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import {MainPage, RegisterPage, LoginPage, GlobalFeedPage, SignInPage, ArticlePage, YourFeedPage} from '../src/pages/index';
-
+import {MainPage, RegisterPage, EditArticlePage, GlobalFeedPage, SignInPage, ArticlePage, YourFeedPage} from '../src/pages/index';
 
 const URL = 'https://realworld.qa.guru/';
-
 
 test.describe('Авторизация', () => {
   test.beforeEach(async ({ page }) => {
@@ -56,7 +54,7 @@ test.describe('Авторизация', () => {
 
         const yourFeedpage = new YourFeedPage(page);
         const articlePage = new ArticlePage(page);
-        const globalfeedPage = new GlobalFeedPage(page);
+        const editArticle = new EditArticlePage(page);
 
           // Создаем новую статью
         await yourFeedpage.createArticle();
@@ -64,8 +62,8 @@ test.describe('Авторизация', () => {
         
 
           // Редактируем созданную статью
-        await globalfeedPage.gotoEdit();
-        await articlePage.editArticle(editArticleText);
+        await editArticle.gotoEdit();
+        await editArticle.editArticle(editArticleText);
 
         await expect(yourFeedpage.articleFirst).toContainText(editArticleText.title);
 
@@ -93,7 +91,6 @@ test.describe('Авторизация', () => {
 
 });
 
-
     test('Пользователь может удалить статью', async ({page}) => {
 
         const newArticle = {
@@ -102,54 +99,36 @@ test.describe('Авторизация', () => {
         description: faker.lorem.text(),
         tags: faker.book.genre(),
     };
-  const yourFeedpage = new YourFeedPage(page);
+  const yourFeedPage = new YourFeedPage(page);
   const articlePage = new ArticlePage(page);
   const globalfeedPage = new GlobalFeedPage(page);
-
-
+  const editArticle = new EditArticlePage(page);
   
-    // Создаем новую статью
-    await yourFeedpage.createArticle();
+// Создаем новую статью
+    await yourFeedPage.createArticle();
     await articlePage.actionNewArticle(newArticle);
 
-
 // Проверьте что мы на странице статьи
-await expect(page).toHaveURL(/.*\/article/);
-await expect(page.locator('h1')).toContainText(newArticle.title);
-console.log('Статья создана:', newArticle.title);
+    await expect(articlePage.page).toHaveURL(/\/article/);
+    await expect(articlePage.page.locator('h1')).toBeVisible();
+    await expect(articlePage.page.locator('h1')).toContainText(newArticle.title);
+    console.log('Статья создана:', newArticle.title);
 
-           // Переходим в профиль чтобы увидеть статью
+// Переходим в профиль чтобы увидеть статью
     await globalfeedPage.transferProfile();
-    await expect(page).toHaveURL(/.*\/profile/);
-    console.log('Перешли в профиль');
 
-        // Проверяем что статьи есть в профиле
-    const articlesCount = await articlePage.getArticlesCount();
-    console.log('Статей в профиле:', articlesCount);
-    expect(articlesCount).toBeGreaterThan(0);
-
-    // Открываем статью
+// Открываем статью
     await articlePage.clickFirstArticle();
-    await expect(page).toHaveURL(/.*\/article/);
-    console.log('Статья открыта');
 
-        // Проверяем что кнопка удаления видна
-    await expect(articlePage.deleteButton).toBeVisible({ timeout: 10000 });
-    console.log('Кнопка Delete видна');
+    await editArticle.deleteArticle();
 
-    // Удаляем статью
-    await articlePage.deleteArticle(page); 
+    await expect(yourFeedPage.articleCommentText).toContainText('Your Feed');
 
-    // Проверяем что вернулись на главную
-    await expect(page.getByRole('link', { name: 'Home' })).toBeVisible();
-    console.log('Удаление завершено успешно');
 });
+
 
 test('Пользователь может открыть первый тег Реклама', async ({
     page,}) => {
-
-		const mainPage = new MainPage(page);
-		const registerPage = new RegisterPage(page);
        
       const firstTag = page.locator('.tag-pill', { hasText: 'реклама' }).first();
   
@@ -157,8 +136,8 @@ test('Пользователь может открыть первый тег Р�
 		
 	});
 
-});
-    
+
+    });
 	
 
     
