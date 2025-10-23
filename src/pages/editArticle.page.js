@@ -17,10 +17,6 @@ this.deleteArticleButton = page.getByRole('button', { name: 'Delete Article' }).
 this.editArticleButton = page.getByRole('button', { name: 'Edit Article' }).first();
 this.deleteCommentButton = page.locator('.btn.btn-sm.btn-outline-secondary.pull-xs-right');
 
-this.navigationLogin = page.getByRole('navigation').getByText('Marina');
-this.profile = page.getByRole('link', { name: ' Profile' });
-this.selectArticle = page.getByRole('link', { name: 'Title text Marina me and you' });
-
 this.firstArticle = page.locator('.article-preview').first();
 this.deleteButton = page.getByRole('button', { name: 'Delete Article' })
                                .or(page.locator('.btn-outline-danger'))
