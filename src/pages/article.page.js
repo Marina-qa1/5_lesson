@@ -21,6 +21,9 @@ this.firstArticle = page.locator('.article-preview').first();
 this.articleTitle = page.locator('h1').first();
 this.readMoreButton = page.locator('a').filter({ hasText: /read more|читать/i });
 this.articleCards = page.locator('.article-preview');
+
+this.url = /\/article/;
+this.articleTitle = page.locator('h1');
         
 // Локаторы для страницы статьи
 this.articleTitlePage = page.locator('[data-testid="article-title"]');
@@ -62,6 +65,7 @@ async getFirstArticle() {
     }
 
 async clickFirstArticle() {
+       // console.log('URL перед кликом на статью:', await this.page.url());
         
         // Получим заголовок статьи для отладки
         const articleTitle = await this.articleTitleInList.textContent();
@@ -72,6 +76,17 @@ async clickFirstArticle() {
         // Ждем загрузки 
         await this.page.waitForLoadState('networkidle');
         
+        // console.log('URL после клика на статью:', await this.page.url());
+        
+        // // Если не перешли на страницу статьи, пробуем Read more
+        if (!(await this.page.url()).includes('/article')) {
+            console.log('Не перешли на страницу статьи, пробуем Read more...');
+            
+            if (await this.readMoreLink.isVisible()) {
+                await this.readMoreLink.click();
+                await this.page.waitForLoadState('networkidle');
+            }
+        }
     }
 
 async transferProfile() {
@@ -87,7 +102,19 @@ async writeComment(commentText) {
         await this.postCommentButton.click();
     }
 
+    // Методы для проверок
+async verifyArticleCreated(expectedTitle) {
 
+    await this.page.waitForURL(/\/article/);
+    await this.articleTitle.waitFor({ state: 'visible' });
+    
+    const actualTitle = await this.articleTitle.textContent();
+    if (!actualTitle.includes(expectedTitle)) {
+        throw new Error(`Заголовок: "${actualTitle}" не содержит "${expectedTitle}"`);
+    }
+    
+    console.log('Статья создана:', expectedTitle);
+}
 
 }
   

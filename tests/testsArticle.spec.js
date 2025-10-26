@@ -108,11 +108,8 @@ test.describe('Авторизация', () => {
     await yourFeedPage.createArticle();
     await articlePage.actionNewArticle(newArticle);
 
-// Проверьте что мы на странице статьи
-    await expect(articlePage.page).toHaveURL(/\/article/);
-    await expect(articlePage.page.locator('h1')).toBeVisible();
-    await expect(articlePage.page.locator('h1')).toContainText(newArticle.title);
-    console.log('Статья создана:', newArticle.title);
+// Проверяем что мы на странице статьи (используем методы page object)
+    await articlePage.verifyArticleCreated(newArticle.title);
 
 // Переходим в профиль чтобы увидеть статью
     await globalfeedPage.transferProfile();
@@ -126,17 +123,12 @@ test.describe('Авторизация', () => {
 
 });
 
+test('Пользователь может открыть первый тег Реклама', async ({ page }) => {
+    const articlePage = new ArticlePage(page);
+    
+    await expect(articlePage.firstTag).toContainText('реклама');
 
-test('Пользователь может открыть первый тег Реклама', async ({
-    page,}) => {
-       
-      const firstTag = page.locator('.tag-pill', { hasText: 'реклама' }).first();
-  
- await expect(firstTag).toContainText('реклама');
-		
-	});
-
-
+});
     });
 	
 
