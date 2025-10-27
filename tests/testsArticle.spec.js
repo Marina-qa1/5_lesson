@@ -2,7 +2,9 @@ import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import {MainPage, RegisterPage, EditArticlePage, GlobalFeedPage, SignInPage, ArticlePage, YourFeedPage} from '../src/pages/index';
 
+
 const URL = 'https://realworld.qa.guru/';
+
 
 test.describe('Авторизация', () => {
   test.beforeEach(async ({ page }) => {
@@ -84,10 +86,10 @@ test.describe('Авторизация', () => {
         await yourFeedpage.createArticle();
         await articlePage.actionNewArticle(newArticle);
 
-     // Пишем комментарий
-     await articlePage.writeComment(commentText);
+        // Пишем комментарий
+        await articlePage.writeComment(commentText);
 
-     await expect(yourFeedpage.articleCommentText).toContainText(commentText.newCommentText);
+        await expect(yourFeedpage.articleCommentText).toContainText(commentText.newCommentText);
 
 });
 
@@ -104,17 +106,17 @@ test.describe('Авторизация', () => {
   const globalfeedPage = new GlobalFeedPage(page);
   const editArticle = new EditArticlePage(page);
   
-// Создаем новую статью
+    // Создаем новую статью
     await yourFeedPage.createArticle();
     await articlePage.actionNewArticle(newArticle);
 
-// Проверяем что мы на странице статьи (используем методы page object)
+   // Проверяем что мы на странице статьи (используем методы page object)
     await articlePage.verifyArticleCreated(newArticle.title);
 
-// Переходим в профиль чтобы увидеть статью
+   // Переходим в профиль чтобы увидеть статью
     await globalfeedPage.transferProfile();
 
-// Открываем статью
+   // Открываем статью
     await articlePage.clickFirstArticle();
 
     await editArticle.deleteArticle();
@@ -126,9 +128,11 @@ test.describe('Авторизация', () => {
 test('Пользователь может открыть первый тег Реклама', async ({ page }) => {
     const articlePage = new ArticlePage(page);
     
+    await articlePage.clickFirstTag();
     await expect(articlePage.firstTag).toContainText('реклама');
-
+    
 });
+
     });
 	
 

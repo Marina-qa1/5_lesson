@@ -1,13 +1,10 @@
 export class GlobalFeedPage {
 	constructor(page) {
 		// техническое описание страницы
-		    this.signupLink = page.getByRole('link', { name: 'Sign up' });
-		    this.loginLink = page.getByRole('link', { name: 'Login' });
-
-        this.navigationLogin = page.getByRole('navigation').getByText('Marina');
-        this.profile = page.getByRole('link', { name: ' Profile' });
-        this.selectArticle = page.getByRole('link', { name: 'Title text Marina me and you' });
-
+		this.signupLink = page.getByRole('link', { name: 'Sign up' });
+		this.loginLink = page.getByRole('link', { name: 'Login' });
+        this.navigationLogin = page.locator('img.user-pic, .user-avatar, [alt*="user"]');
+        this.profile = page.getByRole('link', { name: /profile/i });
         this.editNewArticle = page.getByRole('link', { name: 'Edit Article' }).first();
         this.editTitle = page.getByRole('textbox', { name: 'Article Title' });
         this.editShortText = page.getByRole('textbox', { name: 'What\'s this article about?' });
@@ -15,9 +12,7 @@ export class GlobalFeedPage {
         this.editTag = page.getByRole('textbox', { name: 'Enter tags' });
         this.ubdateButton = page.getByRole('button', { name: 'Update Article' });
         this.commentButton = page.getByRole('button', { name: 'Post Comment' });
-
         this.deleteButton = page.getByRole('button', { name: ' Delete Article' }).first();
-
         this.notAvailable = page.getByRole('button', { name: 'Your Feed' });
 
 	}
@@ -26,11 +21,13 @@ export class GlobalFeedPage {
 		await this.signupLink.click();
 	}
 
-   async transferProfile() {
-
-		await this.navigationLogin.click();
-        await this.profile.click();
-	} 
+    async transferProfile() {
+    await this.navigationLogin.click();
+    
+    // Ждем появления элемента профиля
+    await this.profile.waitFor({ state: 'visible' });
+    await this.profile.click();
+    }
 
    async choiceArticle() {
 
